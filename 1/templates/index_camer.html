@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gender Detection</title>
+</head>
+<body>
+
+    <h1>Gender Detection</h1>
+
+    <img id="videoFeed" width="640" height="480" src="{{ url_for('video_feed') }}" alt="Camera Feed">
+
+    <form id="captureForm">
+        <button type="button" onclick="captureFrame()">Capture</button>
+        <input type="hidden" id="capturedImage" name="capturedImage">
+        <button type="button" onclick="submitCapture()">Submit</button>
+    </form>
+
+    <script>
+        let capturedImageData;
+
+        function captureFrame() {
+            const videoFeed = document.getElementById('videoFeed');
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            canvas.width = videoFeed.width;
+            canvas.height = videoFeed.height;
+
+            context.drawImage(videoFeed, 0, 0, videoFeed.width, videoFeed.height);
+            const capturedImage = canvas.toDataURL('image/jpeg');
+
+            document.getElementById('capturedImage').value = capturedImage;
+        }
+
+        function submitCapture() {
+            const form = document.getElementById('captureForm');
+            form.submit();
+        }
+    </script>
+
+</body>
+</html>

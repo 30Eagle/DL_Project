@@ -1,0 +1,19 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="MongoClient" />
+          <option value="project1.project1.views" />
+          <option value="preprocessin" />
+          <option value="sc.tr_gen" />
+          <option value="sc.tt_gen" />
+          <option value="PreProcess_Data" />
+          <option value="classification_optimizer" />
+          <option value="tensorflow.keras" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
