@@ -6,15 +6,15 @@ import Retionpathypreprocess_Data as dp
 import rnn_classification as rm
 
 if __name__ == "__main__":
-    images_folder_path = 'D:\\DL Project\\1\\gender\\train'
+    images_folder_path = 'D:\\DL Project\\emotion'
 
     imdata = dp.PreProcess_Data()
     retina_df, train, label = imdata.preprocess(images_folder_path)
-    imdata.visualization_images(images_folder_path, 2)
+    imdata.visualization_images(images_folder_path, 7)
     tr_gen, tt_gen, va_gen = imdata.generate_train_test_images(train, label)
 
     input_shape = (128, 128, 3)
-    num_classes = 2
+    num_classes = 7
     R_Model = rm.DeepANN()
     m = R_Model.rnn_model(input_shape)
     Rnn_history = m.fit(tr_gen, epochs=10, validation_data=va_gen)

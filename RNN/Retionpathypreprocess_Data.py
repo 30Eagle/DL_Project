@@ -5,21 +5,24 @@ import pandas as pd
 from keras.preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import train_test_split
 
+import math
+
 class PreProcess_Data:
-    def visualization_images(self, dir_path, nimages):
-        fig, axs = plt.subplots(2, 2, figsize=(8, 8))
+    def visualization_images(self, dir_path, nimages_per_class):
+        num_classes = len(os.listdir(dir_path))
+        fig, axs = plt.subplots(num_classes, nimages_per_class, figsize=(12, 12))
         dpath = dir_path
-        count = 0
-        for i in os.listdir(dpath):
-            train_class = os.listdir(os.path.join(dpath, i))
-            for j in range(nimages):
-                img = os.path.join(dpath, i, train_class[j])
-                img = cv2.imread(img)
-                axs[count][j].title.set_text(i)
-                axs[count][j].imshow(img)
-            count += 1
-            fig.tight_layout()
-        plt.show(block=True)
+        for i, class_name in enumerate(os.listdir(dpath)):
+            train_class = os.listdir(os.path.join(dpath, class_name))
+            for j in range(nimages_per_class):
+                img_path = os.path.join(dpath, class_name, train_class[j])
+                img = cv2.imread(img_path)
+                axs[i, j].imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+                axs[i, j].set_title(class_name)
+                axs[i, j].axis('off')
+        plt.tight_layout()
+        plt.show()
+
 
     def preprocess(self, dir_path):
         dpath = dir_path
@@ -59,7 +62,7 @@ class PreProcess_Data:
             target_size=(128, 128), #32 for vgg else 28 normally, 128 for rnn
             color_mode="rgb",
             class_mode="categorical",
-            batch_size=28,
+            batch_size=32,
             subset='training'
         )
 
@@ -71,7 +74,7 @@ class PreProcess_Data:
             target_size=(128, 128),
             color_mode="rgb",
             class_mode="categorical",
-            batch_size=28,
+            batch_size=32,
             subset='validation'
         )
 
@@ -83,7 +86,7 @@ class PreProcess_Data:
             target_size=(128, 128),
             color_mode="rgb",
             class_mode="categorical",
-            batch_size=28
+            batch_size=32
         )
 
         print(f"Train images shape: {train_data.shape}")

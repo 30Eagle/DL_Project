@@ -8,6 +8,6 @@ class DeepANN:
        # model.add(Reshape((input_shape[0] * input_shape[1], input_shape[2])))
         model.add(Reshape((input_shape[0] * input_shape[1], input_shape[2]), input_shape=input_shape))
         model.add(SimpleRNN(units=64, activation='relu'))
-        model.add(Dense(units=2, activation='softmax'))
+        model.add(Dense(units=7, activation='softmax'))
         model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
         return model
