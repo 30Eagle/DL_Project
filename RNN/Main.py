@@ -1,11 +1,24 @@
 import os
-import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
+from flask import Flask, render_template, request
 import Retionpathypreprocess_Data as dp
 import rnn_classification as rm
+import matplotlib.pyplot as plt
 
-if __name__ == "__main__":
+app = Flask(__name__)
+
+# Load the pre-trained model
+input_shape = (128, 128, 3)
+num_classes = 7
+R_Model = rm.DeepANN()
+model = R_Model.rnn_model(input_shape)
+model.load_weights('RNNModel.keras')
+
+@app.route('/')
+def index():
+    return render_template('model_selector.html')
+
+@app.route('/run-model', methods=['POST'])
+def run_model():
     images_folder_path = 'D:\\DL Project\\emotion'
 
     imdata = dp.PreProcess_Data()
@@ -13,25 +26,22 @@ if __name__ == "__main__":
     imdata.visualization_images(images_folder_path, 7)
     tr_gen, tt_gen, va_gen = imdata.generate_train_test_images(train, label)
 
-    input_shape = (128, 128, 3)
-    num_classes = 7
-    R_Model = rm.DeepANN()
-    m = R_Model.rnn_model(input_shape)
-    Rnn_history = m.fit(tr_gen, epochs=10, validation_data=va_gen)
+    selected_model = request.form['model']
 
-    # Plotting training and validation loss
-    plt.figure(figsize=(10, 6))
-    plt.plot(Rnn_history.history['loss'], label='Training Loss')
-    plt.plot(Rnn_history.history['val_loss'], label='Validation Loss')
-    plt.title('Training and Validation Loss')
-    plt.xlabel('Epochs')
-    plt.ylabel('Loss')
-    plt.legend()
-    plt.show()
+    if selected_model == 'model1':
+        # Evaluate the pre-trained model
+        test_loss, test_acc = model.evaluate(tr_gen)
 
+        # Prepare results for display
+        result = f'Test Accuracy: {test_acc}'
+        # You can include other result metrics here
 
+        return render_template('model_results.html', result=result)
+    elif selected_model == 'model2':
+        # You can add more models here
+        pass
+    else:
+        return "Invalid model selected"
 
-    RNN_test_loss, RNN_test_acc = m.evaluate(tr_gen)
-    print(f'Test Accuracy: {RNN_test_acc}')
-    m.save('RNNModel.keras')
-    print(m.summary())
+if __name__ == "__main__":
+    app.run(debug=True)
